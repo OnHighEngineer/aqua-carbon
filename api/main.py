@@ -223,8 +223,25 @@ async def serve_landing():
 
 
 @app.get("/app")
+@app.get("/app.html")
 async def serve_workbench():
     app_file = os.path.join(static_dir, "app.html")
     if os.path.exists(app_file):
         return FileResponse(app_file)
     raise HTTPException(status_code=404, detail="Workbench page not found")
+
+
+@app.get("/{filename:path}.css")
+async def serve_css(filename: str):
+    css_file = os.path.join(static_dir, f"{filename}.css")
+    if os.path.exists(css_file):
+        return FileResponse(css_file, media_type="text/css")
+    raise HTTPException(status_code=404, detail="CSS not found")
+
+
+@app.get("/{filename:path}.js")
+async def serve_js(filename: str):
+    js_file = os.path.join(static_dir, f"{filename}.js")
+    if os.path.exists(js_file):
+        return FileResponse(js_file, media_type="application/javascript")
+    raise HTTPException(status_code=404, detail="JS not found")
